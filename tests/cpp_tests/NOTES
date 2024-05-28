@@ -1,0 +1,96 @@
+== file: leiden.cpp
+description: program to test leidenFindPartition
+             function for memory problems using
+             an instrumentation program such as
+             valgrind and comparing to the leidenalg
+             python module output.
+
+file: Makefile
+description: used to build leiden executable
+
+file: igraph_edgelist.txt
+description: list of graph edges for use when
+             running the leiden executable.
+
+notes:
+  o  set up test directory
+       o  make a test directory
+       o  copy edgelist.edg, leiden.cpp, and
+          Makefile from this directory to the
+          test directory. Alternatively, use
+          igraph_edgelist.txt.gz after gunzipping
+          it.
+       o  copy leidenFindPartition.cpp and set
+          #define R_INTERFACE     0
+          to the test directory
+       o  copy the leidenalg *.cpp and
+          *.h files to the test directory
+  o  build leiden executable
+       o  use the make utility to build
+          the executable
+  o  run leiden executable
+       o  type 'leiden'
+  o  test leiden using valgrind
+       o  type 'valgrind --leak-check=full leiden'
+  o  specifying a directed graph vs an undirected
+     graph gives about 1/2 the communities. The
+     python py igraph module appears to default
+     to reading the edgelist as an undirected
+     graph.
+
+
+== file: leidenalg.py
+description: run the leidenalg package.
+notes:
+  o  install leidenalg as a python package from
+     the leidenalg github repository by
+       *  cloning the repository
+       *  ensuring that the correct igraph library
+          is installed in the expected place
+       *  it may be necessary to set the igraph
+          include file directory path by setting
+          using environment variable as
+
+            export IGRAPH_EXTRA_INCLUDE_PATH="/usr/include/igraph"
+
+       *  run the command
+
+            python3 setup.py install --user
+
+  o  in order to use consistent version of igraph,
+     python-igraph, and leidenalg igraph, I used
+     pipx to create a python virtual environment in
+     which I installed python-igraph. The python-igraph
+     installed from source and I edited the setup.py to
+     point to igraph libraries that I installed in a
+     non-conventional place. In order to install the
+     desired python-igraph version in the virtual environment
+     called python-igraph, I used the command
+
+       $HOME/.local/pipx/venvs/python-igraph/bin/python3 -m pip install "leidenalg==0.8.10"
+
+== test in R
+description: test membership using the leidenbase R interface
+notes:
+  o  install leidenbase in R using the command
+ 
+       R CMD install <leidenbase package>
+
+  o  get membership values in R
+
+       library(igraph)
+       library(leidenbase)
+       igraph<-read_graph('edgelist.edg',format='edgelist', directed=FALSE)
+       res<-leiden_find_partition( igraph, partition_type = 'CPMVertexPartition', seed = 2016, resolution_parameter = 0.5, num_iter=2 )
+       which(res$membership==1)-1
+       which(res$membership==2)-1
+       which(res$membership==3)-1
+       ...
+  o  res$membership is a vector whose values are the communities
+     to which each node belongs. For example, the first value
+     is the community to which node 1 belongs, etc.
+  o  the R nodes and communities are 1-based whereas the python
+     and C++ values are 0-based.
+  o  the res$total_weight is the weight of all edges in the graph,
+     which is not the same as the total weight in all communities
+     reported in leidenalg.
