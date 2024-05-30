@@ -59,6 +59,7 @@
 #include <iostream>
 #include <cstdint>
 #include <R.h>
+#include <Rdefines.h>
 #include <Rinternals.h>
 #include <igraph.h>
 #include <R_ext/Visibility.h>
