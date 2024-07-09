@@ -35,7 +35,7 @@ BugReports: https://github.com/cole-trapnell-lab/leidenbase/issues
 NeedsCompilation: yes
 Maintainer: Brent Ewing <bge@uw.edu>
 VignetteBuilder: knitr
-Packaged: 2024-07-09 02:37:35 UTC; brent
+Packaged: 2024-07-09 19:32:13 UTC; brent
 Author: Brent Ewing [aut, cre],
   Vincent Traag [ctb],
   Gábor Csárdi [ctb],
