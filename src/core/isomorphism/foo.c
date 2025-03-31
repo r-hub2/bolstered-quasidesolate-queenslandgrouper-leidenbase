@@ -64,13 +64,12 @@
 
 
 /* define boolean type as char */
-/*
-** Try to avoid problems with system-level definitions.
-*/
-#undef true
-#undef false
-#define true 1
-#define false 0
+#ifndef true
+  #define true 1
+#endif
+#ifndef false
+  #define false 0
+#endif
 
 #define lad_bool_t char
 
@@ -1555,8 +1554,8 @@ int igraph_subisomorphic_lad(const igraph_t *pattern, const igraph_t *target,
                              igraph_vector_ptr_t *maps,
                              igraph_bool_t induced, int time_limit) {
 
-    lad_bool_t firstSol = maps == 0;
-    lad_bool_t initialDomains = domains != 0;
+    bool firstSol = maps == 0;
+    bool initialDomains = domains != 0;
     Tgraph Gp, Gt;
     Tdomain D;
     int invalidDomain;
